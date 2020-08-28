@@ -4,12 +4,14 @@
 
 
 //......................DISPLAY STUFF......................//
+window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height){
 
-
-window* initialiseWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height){
-	
 	window* win = malloc(sizeof(window));
-	win->display = XOpenDisplay(NULL);
+	win->display = XOpenDisplay("axel@192.168.0.16:0.0");
+	if(win->display == NULL){
+		fprintf(stderr, "ca marche pas\n");
+		exit(1);
+	}
 
  	win->screen = DefaultScreen(win->display);
  	win->x = x;		win->y = y;		win->border_width = border_width;
@@ -19,23 +21,30 @@ window* initialiseWindow(unsigned int x, unsigned int y, unsigned int border_wid
 
  	win->window = XCreateSimpleWindow(win->display, DefaultRootWindow(win->display), x, y, width, height, border_width, win->border, win->background);
 	win->gc = XCreateGC(win->display, win->window, 0, NULL);
+	win->cmap = XDefaultColormap(win->display, win->screen);
 	XSetForeground(win->display, win->gc, BlackPixel(win->display, win->screen));
 	XSelectInput(win->display, win->window, StructureNotifyMask);
 
-	return win;
-}
-
-window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height){
-	window* win = initialiseWindow(x, y, border_width, width, height);
 	XMapWindow(win->display, win->window);
 	for(;;){
 	    XEvent e;
 	    XNextEvent(win->display, &e);
 	    if (e.type == MapNotify)
 		  break;
-      }
+    }
 
 	return win;
+}
+
+void setColor(window* win, int r, int g, int b){
+	XColor xcolour;
+
+	xcolour.red = r;    xcolour.green = g;    xcolour.blue = b;
+	xcolour.flags = DoRed | DoGreen | DoBlue;
+	XAllocColor(win->display, win->cmap, &xcolour);
+
+	XSetForeground(win->display, win->gc, xcolour.pixel);
+	XFlush(win->display);
 }
 
 

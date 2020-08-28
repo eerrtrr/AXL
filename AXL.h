@@ -20,6 +20,7 @@ struct WINDOW{
 	unsigned int x, y, border_width, width, height;
 	unsigned long border;
     unsigned long background;
+	Colormap cmap;
 };
 typedef struct WINDOW window;
 
@@ -44,9 +45,8 @@ typedef struct LINES lines;
 
 
 //Display stuff
-window* initialiseWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height);
 window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height);
-
+void setColor(window* win, int r, int g, int b);
 
 //Structs creation
 points* createPointList(unsigned int nbr, short coords[][2]);
