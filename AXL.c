@@ -7,7 +7,7 @@
 window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height){
 
 	window* win = malloc(sizeof(window));
-	win->display = XOpenDisplay("axel@192.168.0.16:0.0");
+	win->display = XOpenDisplay(NULL);
 	if(win->display == NULL){
 		fprintf(stderr, "ca marche pas\n");
 		exit(1);
@@ -36,15 +36,21 @@ window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, 
 	return win;
 }
 
-void setColor(window* win, int r, int g, int b){
-	XColor xcolour;
 
-	xcolour.red = r;    xcolour.green = g;    xcolour.blue = b;
-	xcolour.flags = DoRed | DoGreen | DoBlue;
-	XAllocColor(win->display, win->cmap, &xcolour);
+unsigned long addColor(window* win, int r, int g, int b){
+	XColor color; 
+	color.red = (r+1)*256-1;    color.green = (g+1)*256-1;    color.blue = (b+1)*256-1;
+	color.flags = DoRed | DoGreen | DoBlue;
+	if(XAllocColor(win->display, win->cmap, &color))
+		return(color.pixel);
+    else{
+	    printf("Warning: can't allocate requested colour\n");
+	    return(BlackPixel(win->display, win->cmap));
+    }
+}
 
-	XSetForeground(win->display, win->gc, xcolour.pixel);
-	XFlush(win->display);
+void setColor(window* win, unsigned long color){
+	XSetForeground(win->display, win->gc, color);
 }
 
 
