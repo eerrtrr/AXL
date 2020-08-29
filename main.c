@@ -3,15 +3,22 @@
 #include "AXL.h"
 #include "unistd.h"
 
-
+int x = 0;
+int y = 0;
 
 int main(int argc, char** argv){
 	
 	window* window = createWindow(50, 50, 1, 500, 500);
-	setColor(window, 105,150,105);
-	sleep(1);
-	drawRectangle(window, 20, 20, 125, 70, true);
-	XFlush(window->display);
+	unsigned long color = addColor(window, 255,0,0);
+	setColor(window, color);
+	for(int i=0; i<600; i++){
+		cleanWindow(window);
+		drawRectangle(window, x, y, 125, 70, true);
+		XFlush(window->display);
+		x++;	y++;
+		usleep(100000);
+	}
+	
 
 	while(1){
 		XEvent e;

@@ -46,7 +46,8 @@ typedef struct LINES lines;
 
 //Display stuff
 window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height);
-void setColor(window* win, int r, int g, int b);
+void setColor(window* win, unsigned long color);
+unsigned long addColor(window* win, int r, int g, int b);
 
 //Structs creation
 points* createPointList(unsigned int nbr, short coords[][2]);
