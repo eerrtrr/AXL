@@ -5,6 +5,7 @@
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/Xatom.h>
 # include <stdio.h>
 # include <stdlib.h>
 #include <stdbool.h>
@@ -21,6 +22,8 @@ struct WINDOW{
 	unsigned long border;
     unsigned long background;
 	Colormap cmap;
+	Atom close;
+	bool exist;
 };
 typedef struct WINDOW window;
 
@@ -45,7 +48,10 @@ typedef struct LINES lines;
 
 
 //Display stuff
-window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height);
+window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height, char* name);
+void destroyWindow(window* win);
+
+//Colors
 void setColor(window* win, unsigned long color);
 unsigned long addColor(window* win, int r, int g, int b);
 

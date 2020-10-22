@@ -4,7 +4,7 @@
 
 
 //......................DISPLAY STUFF......................//
-window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height){
+window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, unsigned int width, unsigned int height, char* name){
 
 	window* win = malloc(sizeof(window));
 	win->display = XOpenDisplay(NULL);
@@ -23,7 +23,13 @@ window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, 
 	win->gc = XCreateGC(win->display, win->window, 0, NULL);
 	win->cmap = XDefaultColormap(win->display, win->screen);
 	XSetForeground(win->display, win->gc, BlackPixel(win->display, win->screen));
-	XSelectInput(win->display, win->window, StructureNotifyMask);
+	XSelectInput(win->display, win->window, StructureNotifyMask | ExposureMask | KeyPressMask);
+	
+	XStoreName(win->display, win->window, name);
+
+	win->exist = true;
+	win->close = XInternAtom(win->display, "WM_DELETE_WINDOW", False);
+	XSetWMProtocols(win->display, win->window, &win->close, 1);
 
 	XMapWindow(win->display, win->window);
 	for(;;){
@@ -36,7 +42,14 @@ window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, 
 	return win;
 }
 
+void destroyWindow(window* win){
+	XDestroyWindow(win->display, win->window);
+  	XCloseDisplay(win->display);
+}
 
+
+
+//......................COLORS......................//
 unsigned long addColor(window* win, int r, int g, int b){
 	XColor color; 
 	color.red = (r+1)*256-1;    color.green = (g+1)*256-1;    color.blue = (b+1)*256-1;
