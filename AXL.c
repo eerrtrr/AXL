@@ -9,9 +9,10 @@ window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, 
 	window* win = malloc(sizeof(window));
 	win->display = XOpenDisplay(NULL);
 	if(win->display == NULL){
-		fprintf(stderr, "ca marche pas\n");
+		log_fatal("An error has occured while creating the display");
 		exit(1);
 	}
+	log_trace("Display created");
 
  	win->screen = DefaultScreen(win->display);
  	win->x = x;		win->y = y;		win->border_width = border_width;
@@ -43,6 +44,7 @@ window* createWindow(unsigned int x, unsigned int y, unsigned int border_width, 
 }
 
 void destroyWindow(window* win){
+	log_trace("Distroying window");
 	XDestroyWindow(win->display, win->window);
   	XCloseDisplay(win->display);
 }
@@ -55,9 +57,13 @@ unsigned long addColor(window* win, int r, int g, int b){
 	color.red = (r+1)*256-1;    color.green = (g+1)*256-1;    color.blue = (b+1)*256-1;
 	color.flags = DoRed | DoGreen | DoBlue;
 	if(XAllocColor(win->display, win->cmap, &color))
+	{
+		log_trace("Colour allocated");
 		return(color.pixel);
-    else{
-	    printf("Warning: can't allocate requested colour\n");
+	}
+	else
+	{
+	    log_warn("Can't allocate requested colour");
 	    return(BlackPixel(win->display, win->cmap));
     }
 }
