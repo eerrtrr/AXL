@@ -13,7 +13,7 @@ int main(int argc, char** argv){
 	window* window = createWindow(50, 50, 1, 500, 500, "C'EST UNE FENETRE");
 	unsigned long color = addColor(window, 255,0,0);
 	setColor(window, color);
-
+/*
 	for(int i=0; i<600; i++){
 		cleanWindow(window);
 		drawRectangle(window, x, y, 125, 70, true);
@@ -21,7 +21,7 @@ int main(int argc, char** argv){
 		x++;	y++;
 		usleep(100000);
 	}
-
+*/
 
 	while(window->exist){
 		XEvent e;
