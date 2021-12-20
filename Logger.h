@@ -3,6 +3,7 @@
 
 #include "stdio.h"
 #include "stdlib.h"
+#include <stdarg.h>
 
 #define LOG 1
 
@@ -41,6 +42,6 @@ static inline char *stringFromLogLevel(enum level lvl)
 #define log_error(...) log_log(LOG_ERROR, CBlue, __FILE__, __LINE__, __VA_ARGS__)
 #define log_fatal(...) log_log(LOG_FATAL, CRed, __FILE__, __LINE__, __VA_ARGS__)
 
-void log_log(int level, const char* COLOR, const char *file, int line, const char *fmt);
+void log_log(int level, const char* COLOR, const char *file, int line, const char *fmt, ...);
 
 #endif

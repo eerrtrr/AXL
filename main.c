@@ -49,6 +49,7 @@ int main(int argc, char** argv){
 				
 			case ConfigureNotify:
 				window->x = e.xconfigure.x;		window->y = e.xconfigure.y;		window->width = e.xconfigure.width;		window->height = e.xconfigure.height;
+				log_trace("%d", window->x);
 			break;
 		}
 	}
